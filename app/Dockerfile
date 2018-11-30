@@ -5,14 +5,15 @@ ENV PATH="/mattermost/bin:${PATH}"
 ENV MM_VERSION=5.5.0
 
 # Build argument to set Mattermost edition
-ARG edition=enterprise
-ARG PUID=2000
-ARG PGID=2000
+ARG edition=team
+ARG PUID=1000
+ARG PGID=1000
 ARG MM_BINARY=
 
 
 # Install some needed packages
-RUN apk add --no-cache \
+RUN apk --no-cache --update --available upgrade \
+ && apk add --no-cache --update \
 	ca-certificates \
 	curl \
 	jq \
@@ -22,7 +23,8 @@ RUN apk add --no-cache \
 	mailcap \
 	netcat-openbsd \
 	xmlsec-dev \
-	&& rm -rf /tmp/*
+ && rm -rf /var/cache/apk/* \
+        /tmp/*
 
 # Get Mattermost
 RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
